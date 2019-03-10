@@ -1,0 +1,38 @@
+<launch>
+  <!-- checkerboard -->
+  <group ns="/camera/rgb/" >
+    <!-- <param name="single" value="1" /> -->
+    <param name="display" type="int" value="1" />
+    <param name="rect0_size_x" value="0.025" />
+    <param name="rect0_size_y" value="0.025" />
+    <param name="grid0_size_x" value="8" />
+    <param name="grid0_size_y" value="6" />
+    <param name="type0" value="chess" />
+
+    <node name="checkerboard_detector" 
+          pkg="checkerboard_detector"
+          type="checkerboard_detector">
+      <remap from="image" to="/grobal/image_raw" />
+      <remap from="camera_info" to="/camera_info" />
+    </node>
+
+    <node name="objectdetection_tf_publisher"
+          pkg="checkerboard_detector"
+          type="objectdetection_tf_publisher.py" >
+      <param name="latest_publish" value="true"/>
+    </node>
+  </group>
+
+
+  <node pkg="tf" 
+        type="static_transform_publisher" 
+        name="checkerboard_to_robot"
+        args="0.089805 -0.461243 0.0 1.5708 0.0 3.1415 /object /robot_base 100" />
+
+  <!-- <include file="$(find uvc_camera)/launch/camera_node.launch" /> -->
+
+  <node pkg="dynamic_tf_publisher" name="tf_publish" type="tf_publish.py"/>
+
+  <!-- end checkerboard  -->
+
+</launch>
